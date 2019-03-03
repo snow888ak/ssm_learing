@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kezhong1986.ssm.mapper.RoleMapper">
+
+    <select id="findRolesByMap" parameterType="map" resultType="role">
+        select *
+        from ssm_learning.t_role
+        where role_name like concat('%', #{roleName}, '%')
+          and note like concat('%', #{note}, '%')
+    </select>
+
+    <select id="findRolesByAnnotation" resultType="role">
+        select *
+        from ssm_learning.t_role
+        where role_name like concat('%', #{roleName}, '%')
+          and note like concat('%', #{note}, '%')
+    </select>
+
+    <select id="findRolesByBean" parameterType="com.kezhong1986.ssm.pojo.RoleParams" resultType="role">
+        select *
+        from ssm_learning.t_role
+        where role_name like concat('%', #{roleName}, '%')
+          and note like concat('%', #{note}, '%')
+    </select>
+
+    <select id="findRolesByMix" resultType="role">
+        select *
+        from ssm_learning.t_role
+        where role_name like concat('%', #{roleParams.roleName}, '%')
+          and note like concat('%', #{roleParams.note}, '%')
+        limit #{pageParams.start}, #{pageParams.size}
+    </select>
+
+</mapper>
