@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kezhong1986.ssm.mapper.RoleMapper">
+
+    <!--id resultMap的唯一标识，type映射类（别名或全限定名） -->
+    <resultMap id="roleMap" type="role">
+        <!--property对应java类字段， column对应表字段， 将sql表字段与java类属性立映射关系-->
+        <id property="id" column="id"/>
+        <!--id子元素，代表resultMap的主键-->
+        <id property="rId" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="rName" column="role_name"/>
+        <result property="note" column="note"/>
+        <result property="rNote" column="role_name"/>
+    </resultMap>
+
+    <!--resultMap属性，指定使用id为roleMap的resultMap作为映射规则-->
+    <select id="getRoleUseResultMap" parameterType="Long" resultMap="roleMap">
+        select id, role_name, note
+        from ssm_learning.t_role
+        where id = #{id}
+    </select>
+
+</mapper>
