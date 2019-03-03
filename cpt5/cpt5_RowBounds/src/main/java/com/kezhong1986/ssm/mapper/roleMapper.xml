@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kezhong1986.ssm.mapper.RoleMapper">
+
+    <resultMap id="roleMap" type="role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="note" column="note"/>
+    </resultMap>
+
+    <select id="findByRowBounds" resultMap="roleMap">
+        select id, role_name, note
+        from ssm_learning.t_role
+        where role_name like concat('%', #{roleParam.roleName}, '%')
+          and note like concat('%', #{roleParam.note}, '%')
+    </select>
+
+</mapper>
