@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kezhong1986.ssm.mapper.RoleMapper">
+
+    <!--useGenerateKeys：使用useGeneratedKeys方法获取数据库内部生成的主键-->
+    <insert id="insertRole" parameterType="role" useGeneratedKeys="true" keyProperty="id">
+        insert into ssm_learning.t_role(role_name, note) value (#{roleName}, #{note})
+    </insert>
+
+    <insert id="insertRoleCustomPK" parameterType="role">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            # 从t_role表中获取id的最大值，如果为null则返回1，如果有值，在最大值上+3并返回
+            select if(max(id) = null, 1, max(id) + 3) from ssm_learning.t_role
+        </selectKey>
+        insert into ssm_learning.t_role(id, role_name, note) value (#{id}, #{roleName}, #{note})
+    </insert>
+
+</mapper>

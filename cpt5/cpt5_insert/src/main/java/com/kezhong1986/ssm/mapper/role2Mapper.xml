@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kezhong1986.ssm.mapper.Role2Mapper">
+
+    <insert id="insertRole2" parameterType="role2" useGeneratedKeys="true" keyProperty="id">
+        <selectKey keyProperty="sn" order="BEFORE" resultType="string">
+            select concat(YEAR(NOW()), '-', lpad(count(*) + 1, 4, 0)) from t_role_2
+        </selectKey>
+        insert into ssm_learning.t_role_2(role_name, sn) value (#{name}, #{sn})
+    </insert>
+
+</mapper>
