@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kezhong1986.ssm.mapper.RoleMapper">
+
+    <resultMap id="roleMap" type="role">
+        <id property="id" column="id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="note" column="note"/>
+    </resultMap>
+
+    <sql id="roleCols">
+        id, role_name, note
+    </sql>
+
+    <insert id="insertRole" parameterType="role">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE" statementType="PREPARED">
+            select if (max(id) = null, 1, max(id) + 3) from ssm_learning.t_role
+        </selectKey>
+
+        insert into ssm_learning.t_role(<include refid="roleCols"/>)
+        value (#{id}, #{roleName}, #{note})
+    </insert>
+
+    <select id="getRole" parameterType="int" resultMap="roleMap">
+        select
+        <include refid="roleCols"/>
+        from ssm_learning.t_role where id = #{id}
+    </select>
+
+    <sql id="roleCols2">
+        ${alias}.id, ${alias}.role_name, ${alias}.note
+    </sql>
+
+    <select id="getRole2" parameterType="int" resultType="role">
+        select
+        <include refid="roleCols2">
+            <property name="alias" value="r"/>
+        </include>
+        from ssm_learning.t_role r where id = #{id}
+    </select>
+
+</mapper>
