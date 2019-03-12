@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kezhong1986.ssm.mapper.UserMapper">
+
+    <resultMap id="userMapper" type="com.kezhong1986.ssm.pojo.User">
+        <id property="id" column="u_id" />
+        <result property="userName" column="u_user_name"/>
+        <result property="sex" column="u_sex" />
+        <result property="mobile" column="u_mobile" />
+        <result property="tel" column="u_tel" />
+        <result property="email" column="u_email" />
+        <result property="note" column="u_note" />
+
+        <collection property="roles" column="u_id" fetchType="lazy"
+                    select="com.kezhong1986.ssm.mapper.RoleMapper.findRoleByUser" />
+
+    </resultMap>
+
+    <select id="getUser" parameterType="long" resultMap="userMapper">
+        select u.id as u_id,
+               u.user_name as u_user_name,
+               u.password as u_password,
+               u.sex as u_sex,
+               u.mobile as u_mobile,
+               u.tel as u_tel,
+               u.email as u_email,
+               u.note as u_note
+        from ssm_learning.t_user u
+        where id = #{id}
+    </select>
+
+    <select id="findUserByRole" parameterType="long" resultMap="userMapper">
+        select u.id as u_id,
+               u.user_name as u_user_name,
+               u.password as u_password,
+               u.sex as u_sex,
+               u.mobile as u_mobile,
+               u.tel as u_tel,
+               u.email as u_email,
+               u.note as u_note,
+               ur.id as ur_id,
+               ur.role_id as ur_role_id,
+               ur.user_id as ur_user_id
+        from ssm_learning.t_user u,
+             ssm_learning.t_user_role ur
+        where u.id = ur.user_id
+          and ur.role_id = #{roleId}
+    </select>
+
+</mapper>

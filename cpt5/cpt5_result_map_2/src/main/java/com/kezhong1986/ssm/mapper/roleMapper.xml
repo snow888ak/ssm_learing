@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kezhong1986.ssm.mapper.RoleMapper">
+
+    <resultMap id="roleMapper" type="com.kezhong1986.ssm.pojo.Role">
+
+        <id property="id" column="r_id"/>
+        <result property="roleName" column="r_role_name"/>
+        <result property="note" column="r_note"/>
+
+        <collection property="users" column="r_id" fetchType="lazy"
+                    select="com.kezhong1986.ssm.mapper.UserMapper.findUserByRole"/>
+
+    </resultMap>
+
+    <select id="getRole" parameterType="long" resultMap="roleMapper">
+        select r.id as r_id, r.role_name as r_role_name, r.note as r_note
+        from ssm_learning.t_role r
+        where id = #{id}
+    </select>
+
+    <select id="findRoleByUser" parameterType="long" resultMap="roleMapper">
+        select r.id        as r_id,
+               r.role_name as r_role_name,
+               r.note      as r_note,
+               ur.role_id  as ur_role_id,
+               ur.user_id  as ur_user_id
+        from ssm_learning.t_role r,
+             ssm_learning.t_user_role ur
+        where r.id = ur.role_id
+          and ur.user_id = #{userId}
+    </select>
+
+    <select id="getRol2" parameterType="long" resultType="com.kezhong1986.ssm.pojo.Role">
+        select id, role_name as roleName, note
+        from ssm_learning.t_role
+        where id = #{id}
+    </select>
+
+</mapper>
