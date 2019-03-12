@@ -12,4 +12,6 @@ interface EmployeeMapper {
 
     fun getEmployee(empId: Long): Employee?
 
+    fun getEmployee2(empId: Long): Employee?
+
 }

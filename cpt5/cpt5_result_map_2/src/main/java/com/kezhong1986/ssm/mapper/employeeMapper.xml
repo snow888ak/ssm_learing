@@ -44,4 +44,122 @@
         where id = #{empId}
     </select>
 
+
+    <!-- 通过sql的left join进行级联-->
+    <select id="getEmployee2" parameterType="long" resultMap="employee2">
+        select e.id                                  as e_id,
+               e.real_name                           as e_real_name,
+               e.sex                                 as e_sex,
+               e.birthday                            as e_birthday,
+               e.mobile                              as e_mobile,
+               e.email                               as e_email,
+               e.position                            as e_position,
+               e.note                                as e_note,
+               wc.id                                 as wc_id,
+               wc.emp_id                             as wc_emp_id,
+               wc.real_name                          as wc_real_name,
+               wc.department                         as wc_department,
+               wc.POSITION                           as wc_position,
+               wc.note                               as wc_note,
+               et.id                                 as et_id,
+               et.emp_id                             as et_emp_id,
+               et.task_id                            as et_task_id,
+               et.task_name                          as et_task_name,
+               et.note                               as et_note,
+               t.id                                  as t_id,
+               t.title                               as t_title,
+               t.context                             as t_context,
+               t.note                                as t_note,
+               if(e.sex = 1, mhf.id, fhf.id)         as h_id,
+               if(e.sex = 1, mhf.heart, fhf.heart)   as h_heart,
+               if(e.sex = 1, mhf.liver, fhf.liver)   as h_liver,
+               if(e.sex = 1, mhf.spleen, fhf.spleen) as h_spleen,
+               if(e.sex = 1, mhf.lung, fhf.lung)     as h_lung,
+               if(e.sex = 1, mhf.kidney, fhf.kidney) as h_kidney,
+               if(e.sex = 1, mhf.note, fhf.note)     as h_note,
+               if(e.sex = 1, mhf.id, fhf.id)         as h_id,
+               if(e.sex = 1, mhf.id, fhf.id)         as h_id,
+               if(e.sex = 1, mhf.id, fhf.id)         as h_id,
+               mhf.prostate                          as h_prostate,
+               fhf.uterus                            as h_uterus
+        from ssm_learning.t_employee e
+                 left join ssm_learning.t_work_card wc on e.id = wc.emp_id
+                 left join ssm_learning.t_employee_task et on e.id = et.emp_id
+                 left join ssm_learning.t_task t on et.task_id = t.id
+                 left join ssm_learning.t_male_health_form mhf on e.id = mhf.emp_id
+                 left join ssm_learning.t_female_health_form fhf on e.id = fhf.emp_id
+        where e.id = #{id}
+
+    </select>
+
+    <resultMap id="employee2" type="com.kezhong1986.ssm.pojo.Employee">
+        <id property="id" column="e_id"/>
+        <result property="realName" column="e_real_name"/>
+        <result property="sex" column="e_sex" typeHandler="com.kezhong1986.ssm.typeHandler.SexTypeHandler"/>
+        <result property="birthday" column="e_birthday"/>
+        <result property="mobile" column="e_mobile"/>
+        <result property="email" column="e_email"/>
+        <result property="position" column="e_position"/>
+        <result property="note" column="e_note"/>
+
+        <association property="workCard" column="wc_id" javaType="com.kezhong1986.ssm.pojo.WorkCard">
+
+            <id property="id" column="wc_id"/>
+            <result property="empId" column="wc_emp_id"/>
+            <result property="realName" column="wc_real_name"/>
+            <result property="department" column="wc_department"/>
+            <result property="position" column="wc_position"/>
+            <result property="note" column="wc_note"/>
+        </association>
+
+        <collection property="employeeTaskList" column="et_id" ofType="com.kezhong1986.ssm.pojo.EmployeeTask">
+
+            <id property="id" column="et_id"/>
+            <result property="empId" column="et_emp_id"/>
+            <result property="taskName" column="et_task_name"/>
+            <result property="note" column="et_note"/>
+
+            <association property="task" column="et_task_id" javaType="com.kezhong1986.ssm.pojo.Task">
+                <id property="id" column="t_id"/>
+                <result property="title" column="t_title"/>
+                <result property="context" column="t_context"/>
+                <result property="note" column="t_note"/>
+            </association>
+
+        </collection>
+
+        <discriminator javaType="int" column="e_sex">
+            <case value="1" resultMap="maleHealthFormMapper2"></case>
+            <case value="0" resultMap="femaleHealthFormMapper2"></case>
+        </discriminator>
+    </resultMap>
+
+    <resultMap id="maleHealthFormMapper2" type="com.kezhong1986.ssm.pojo.MaleEmployee" extends="employee2">
+        <association property="maleHealthForm" column="e_id" javaType="com.kezhong1986.ssm.pojo.MaleHealthForm">
+            <id property="id" column="h_id"/>
+            <result property="empId" column="h_emp_id"/>
+            <result property="heart" column="h_heart"/>
+            <result property="liver" column="h_liver"/>
+            <result property="spleen" column="h_spleen"/>
+            <result property="lung" column="h_lung"/>
+            <result property="kidney" column="h_kidney"/>
+            <result property="note" column="h_note"/>
+            <result property="prostate" column="h_prostate"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="femaleHealthFormMapper2" type="com.kezhong1986.ssm.pojo.FemaleEmployee" extends="employee2">
+        <association property="femaleHealthForm" column="e_id" javaType="com.kezhong1986.ssm.pojo.FemaleHealthForm">
+            <id property="id" column="h_id"/>
+            <result property="empId" column="h_emp_id"/>
+            <result property="heart" column="h_heart"/>
+            <result property="liver" column="h_liver"/>
+            <result property="spleen" column="h_spleen"/>
+            <result property="lung" column="h_lung"/>
+            <result property="kidney" column="h_kidney"/>
+            <result property="note" column="h_note"/>
+            <result property="uterus" column="h_uterus"/>
+        </association>
+    </resultMap>
+
 </mapper>
